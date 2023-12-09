@@ -73,11 +73,11 @@ export default class Whiteboard extends React.Component {
 
   onTouch(evt) {
     if (this.props.enabled == false) return;
-    let x, y, timestamp
-    [x, y, timestamp] = [evt.nativeEvent.locationX, evt.nativeEvent.locationY, evt.nativeEvent.timestamp]
+    let x, y, timestamp, strokeWidth, color
+    [x, y, timestamp, strokeWidth, color] = [evt.nativeEvent.locationX, evt.nativeEvent.locationY, evt.nativeEvent.timestamp, this.props.strokeWidth, this.props.color]
 
     let newCurrentPoints = this.state.currentPoints
-    newCurrentPoints.push({ x, y, timestamp })
+    newCurrentPoints.push({ x, y, timestamp, strokeWidth, color })
 
     this.setState({
       previousStrokes: this.state.previousStrokes,
@@ -95,6 +95,7 @@ export default class Whiteboard extends React.Component {
   }
 
   onResponderRelease() {
+
     let strokes = this.state.previousStrokes
     if (this.state.currentPoints.length < 1) return
 
@@ -144,8 +145,8 @@ export default class Whiteboard extends React.Component {
                   return (<Path
                     key={e[0].timestamp}
                     d={this.state.pen.pointsToSvg(points)}
-                    stroke={this.props.color || '#000000'}
-                    strokeWidth={this.props.strokeWidth || 4}
+                    stroke={e[0].color || '#000000'}
+                    strokeWidth={e[0].strokeWidth || 4}
                     fill="none"
                   />)
                 }
